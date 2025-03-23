@@ -11,14 +11,11 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('menu_items', function (Blueprint $table) {
+        Schema::create('packs', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('catégory_id')->references('id')->on('catégories')->onDelete('cascade');
-            $table->string('name')->unique();
-            $table->text('description');
+            $table->string('name');
             $table->decimal('price', 8, 2);
-            $table->string('imageUrl')->nullable();
-            $table->boolean('isAvailable')->default(true);
+            $table->string('imageUrl');
             $table->timestamps();
         });
     }
@@ -28,6 +25,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('menu_items');
+        Schema::dropIfExists('packs');
     }
 };
