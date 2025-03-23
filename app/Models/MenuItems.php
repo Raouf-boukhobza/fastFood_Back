@@ -20,4 +20,14 @@ class MenuItems extends Model
     {
         return $this->belongsTo(Catégorie::class);
     }
+
+    public function orderDetails()
+    {
+        return $this->hasMany(OrderDetails::class);
+    }
+
+    public function packDetails()
+    {
+        return $this->hasMany(PackDetails::class);
+    }
 }

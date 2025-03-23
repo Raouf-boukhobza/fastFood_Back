@@ -7,6 +7,13 @@ use Illuminate\Database\Eloquent\Model;
 class Catégorie extends Model
 {
     protected $fillable = [
-        'name',
+        'name'
     ];
+
+    public function menuItems()
+    {
+        return $this->hasMany(MenuItems::class);
+    }
+
+
 }

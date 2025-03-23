@@ -10,5 +10,17 @@ class Packs extends Model
         'name',
         'price',
         'imageUrl',
+        'is_available'
     ];
+
+    public function orderDetails()
+    {
+        return $this->hasMany(OrderDetails::class);
+    }
+
+
+    public function packDetails()
+    {
+        return $this->hasMany(PackDetails::class);
+    }
 }

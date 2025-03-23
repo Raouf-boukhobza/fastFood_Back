@@ -19,4 +19,6 @@ class Employe extends Model
     {
         return $this->hasOne(User::class);
     }
+
+    
 }
