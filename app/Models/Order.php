@@ -15,8 +15,8 @@ class Order extends Model
         'total_price',
         'type',
         'esstimation_time',
-        'delery_adress',
-        'delery_phone',
+        'delivry_adress',
+        'delivry_phone',
     ];
     public function user()
     {

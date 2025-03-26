@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('order_id')->references('id')->on('orders')->onDelete('cascade');
             $table->decimal('amount', 8, 2);
-            $table->enum('status', ['Pending', 'Paid']);
+            $table->enum('status', ['Pending', 'Paid'])->default('Pending');
             $table->enum('method', ['Cash', 'Credit Card']);
             $table->timestamps();
         });

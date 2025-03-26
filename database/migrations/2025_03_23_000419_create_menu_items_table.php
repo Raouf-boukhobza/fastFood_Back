@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('catégory_id')->references('id')->on('catégories')->onDelete('cascade');
             $table->string('name')->unique();
-            $table->text('description');
+            $table->text('description')->nullable();
             $table->decimal('price', 8, 2);
             $table->string('imageUrl')->nullable();
             $table->boolean('isAvailable')->default(true);
