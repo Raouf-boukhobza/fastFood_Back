@@ -7,13 +7,15 @@ use Illuminate\Database\Eloquent\Model;
 class Reservation extends Model
 {
     protected $fillable = [
+        'tables_id',
+        'client_name',
+        'client_phone',
         'date',
         'hour',
-        'table_id',
     ];
 
     public function table()
     {
-        return $this->belongsTo(Tables::class);
+        return $this->belongsTo(Tables::class , 'tables_id');
     }
 }

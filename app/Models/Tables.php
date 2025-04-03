@@ -11,7 +11,7 @@ class Tables extends Model
         'capacity'
     ];
 
-    public function reservation(){
+    public function reservations(){
         return $this->hasMany(Reservation::class);
     }
 }

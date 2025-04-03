@@ -3,6 +3,7 @@
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\PaymentController;
+use App\Http\Controllers\TablesReservationController;
 use App\Http\Middleware\RoleMiddleware;
 use Illuminate\Foundation\Configuration\Middleware;
 use Illuminate\Http\Request;
@@ -15,14 +16,13 @@ Route::get('/user', function (Request $request) {
 
 
 
-Route::middleware('auth:sanctum' , RoleMiddleware::class . ':Gérant')->group( function(){
-   Route::post('/logout' , [AuthController::class , 'logout']);
-   Route::apiResource('orders' , OrderController::class);
-   
+Route::middleware('auth:sanctum', RoleMiddleware::class . ':Gérant')->group(function () {
+    Route::post('/logout', [AuthController::class, 'logout']);
+    Route::apiResource('orders', OrderController::class);
 });
 
-Route::post('/login' , [AuthController::class , 'login']);
-Route::post('/register' , [AuthController::class , 'register']);
-Route::apiResource('payment' , PaymentController::class)->except(['destroy' , 'store']);
+Route::post('/login', [AuthController::class, 'login']);
+Route::post('/register', [AuthController::class, 'register']);
+Route::apiResource('payment', PaymentController::class)->except(['destroy', 'store']);
 
- 
+Route::apiResource('reservation', TablesReservationController::class);
