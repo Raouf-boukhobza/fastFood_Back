@@ -11,18 +11,21 @@ class TablesReservationController extends Controller
 {
 
     private function AvailableTables($date, $time, $numPeople)
-{
-    return Tables::where('capacity', '>=', $numPeople)
-        ->whereDoesntHave('reservations', function ($query) use ($date, $time) {
-            $query->where('date', $date) // Ensure it's the same day
-                  ->whereRaw("
-                      (TIME(?) BETWEEN reservations.hour AND ADDTIME(reservations.hour, '02:00:00'))
-                      OR (reservations.hour BETWEEN TIME(?) AND ADDTIME(?, '02:00:00'))
-                  ", [$time, $time, $time]);
-        })
-        ->orderBy('capacity', 'asc') // Pick the smallest available table
-        ->first();
-}
+    {
+        return Tables::where('capacity', '>=', $numPeople)
+            ->whereDoesntHave('reservations', function ($query) use ($date, $time) {
+                $query->where('date', $date) // Ensure only checking reservations on the same day
+                      ->whereRaw("
+                          (? BETWEEN reservations.hour AND ADDTIME(reservations.hour, '02:00:00'))
+                          OR (reservations.hour BETWEEN ? AND ADDTIME(?, '02:00:00'))
+                      ", [$time, $time, $time]); // Check overlap both ways
+            })
+            ->orderBy('capacity', 'asc') // Pick the smallest available table
+            ->first();
+    }
+    
+
+    
 
     /**
      * Display a listing of the resource.
@@ -76,7 +79,10 @@ class TablesReservationController extends Controller
      */
     public function show(Reservation $reservation)
     {
-        //
+        return response()->json([
+            'reservation' => $reservation,
+             200
+        ]);
     }
 
     /**
@@ -84,7 +90,7 @@ class TablesReservationController extends Controller
      */
     public function update(Request $request, Reservation $reservation)
     {
-        //
+        
     }
 
     /**
