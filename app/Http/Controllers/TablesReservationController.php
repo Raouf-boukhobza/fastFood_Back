@@ -10,19 +10,31 @@ use Laravel\Prompts\Table;
 class TablesReservationController extends Controller
 {
 
-    private function AvailableTables($date, $time, $numPeople)
-    {
+   
+    
+
+    private function AvailableTables($date, $time, $numPeople, $durationHours )
+   {
+        $startDateTime = "$date $time";
+
+        // Do the duration math in PHP
+         $durationInSeconds = $durationHours * 3600;
+         $endDateTime = date('Y-m-d H:i:s', strtotime($startDateTime) + $durationInSeconds);
+
         return Tables::where('capacity', '>=', $numPeople)
-            ->whereDoesntHave('reservations', function ($query) use ($date, $time) {
-                $query->where('date', $date) // Ensure only checking reservations on the same day
-                      ->whereRaw("
-                          (? BETWEEN reservations.hour AND ADDTIME(reservations.hour, '02:00:00'))
-                          OR (reservations.hour BETWEEN ? AND ADDTIME(?, '02:00:00'))
-                      ", [$time, $time, $time]); // Check overlap both ways
+            ->whereDoesntHave('reservations', function ($query) use ($startDateTime, $endDateTime) {
+              $query->whereRaw("
+                 (
+                     ? < ADDTIME(CONCAT(reservations.date, ' ', reservations.hour), SEC_TO_TIME(reservations.duration * 3600)) 
+                       AND
+                       ? > CONCAT(reservations.date, ' ', reservations.hour)
+                 )
+                ", [$startDateTime, $endDateTime]);
             })
-            ->orderBy('capacity', 'asc') // Pick the smallest available table
+            ->orderBy('capacity', 'asc')
             ->first();
     }
+
     
 
     
@@ -32,7 +44,10 @@ class TablesReservationController extends Controller
      */
     public function index()
     {
-        //
+        $reservations = Reservation::with('table')->get();
+        return response()->json([
+            'reservations' => $reservations,
+        ], 200);
     }
 
     /**
@@ -48,9 +63,16 @@ class TablesReservationController extends Controller
             'date' => 'required|date',
             'hour' => 'required|date_format:H:i',
             'number_of_persones' => 'required|integer|min:1',
+            'duration' => 'required|numeric', // Duration in hours
         ]);
 
-        $table = $this->AvailableTables($validated['date'], $validated['hour'], $validated['number_of_persones']);
+        $table = $this->AvailableTables(
+            $validated['date'], $validated['hour'],
+             $validated['number_of_persones'] ,
+             $validated['duration']
+            );
+
+      
         if (!$table) {
             return response()->json(['error' => 'No available tables'], 400);
         }
@@ -62,6 +84,7 @@ class TablesReservationController extends Controller
             'date' => $validated['date'],
             'hour' => $validated['hour'],
             'number_of_persones' => $validated['number_of_persones'],
+            'duration' => $validated['duration'],
         ]);
 
         return response()->json([
@@ -81,8 +104,7 @@ class TablesReservationController extends Controller
     {
         return response()->json([
             'reservation' => $reservation,
-             200
-        ]);
+        ] , 200);
     }
 
     /**
@@ -90,14 +112,60 @@ class TablesReservationController extends Controller
      */
     public function update(Request $request, Reservation $reservation)
     {
+        $validated = $request->validate([
+            'client_name' => 'required|string|max:255',
+            'client_phone' => 'required|string|max:255',
+            'date' => 'required|date',
+            'hour' => 'required|date_format:H:i',
+            'number_of_persones' => 'required|integer|min:1',
+            'duration' => 'required|numeric', // Duration in hours
+            'status' => 'required|in:confirmed',
+        ]);
+
         
+
+            $table = null;
+            $table = $this->AvailableTables($validated['date'], $validated['hour'], $validated['number_of_persones'] ,$validated['duration']);
+            if (!$table) {
+                $table = $reservation->table;
+            }
+        
+
+        $reservation->update(
+            [
+                'client_name' => $validated['client_name'],
+                'client_phone' => $validated['client_phone'],
+                'tables_id' => $table->id,
+                'date' => $validated['date'],
+                'hour' => $validated['hour'],
+                'number_of_persones' => $validated['number_of_persones'],
+                'duration' => $validated['duration'],
+                'status' => $validated['status'],
+            ]
+        );
+
+        return response()->json([
+            'message' => 'Reservation updated successfully',
+            'reservation' => $reservation,
+        ], 200);
     }
 
     /**
-     * Remove the specified resource from storage.
+     * cancel a specific reservation .
      */
-    public function destroy(Reservation $reservation)
-    {
-        //
+    public function cancel($id){
+        $reservation = Reservation::find($id);
+        if (!$reservation) {
+            return response()->json(['error' => 'Reservation not found'], 404);
+        }
+        
+        //change the state of the reservation to canceled
+        $reservation->update(['status' => 'canceled']);
+        
+
+        return response()->json([
+            'message' => 'Reservation canceled successfully',
+            'reservation' => $reservation,
+        ], 200);
     }
 }

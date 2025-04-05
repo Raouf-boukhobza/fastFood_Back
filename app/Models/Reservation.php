@@ -12,6 +12,8 @@ class Reservation extends Model
         'client_phone',
         'date',
         'hour',
+        'status',
+        'duration',
     ];
 
     public function table()

@@ -18,6 +18,8 @@ return new class extends Migration
             $table->foreignId('tables_id')->references('id')->on('tables')->onDelete('cascade');
             $table->date('date');
             $table->time('hour');
+            $table->enum('status', ['pending', 'confirmed', 'canceled'])->default('pending');
+            $table->decimal('duration' , 4 , 2) ->unsigned();
             $table->timestamps();
         });
     }

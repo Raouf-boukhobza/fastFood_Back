@@ -26,3 +26,4 @@ Route::post('/register', [AuthController::class, 'register']);
 Route::apiResource('payment', PaymentController::class)->except(['destroy', 'store']);
 
 Route::apiResource('reservation', TablesReservationController::class);
+Route::put('reservation/cancel/{id}', [TablesReservationController::class, 'cancel']);
