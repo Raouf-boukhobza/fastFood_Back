@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\MenuItemsController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\TablesReservationController;
@@ -23,7 +24,18 @@ Route::middleware('auth:sanctum', RoleMiddleware::class . ':Gérant')->group(fun
 
 Route::post('/login', [AuthController::class, 'login']);
 Route::post('/register', [AuthController::class, 'register']);
+
+
+//payment
 Route::apiResource('payment', PaymentController::class)->except(['destroy', 'store']);
 
+
+//resrervation
 Route::apiResource('reservation', TablesReservationController::class);
 Route::put('reservation/cancel/{id}', [TablesReservationController::class, 'cancel']);
+
+
+//menuItems
+Route::apiResource('menuItems' , MenuItemsController::class);
+
+

@@ -127,6 +127,9 @@ class TablesReservationController extends Controller
             $table = null;
             $table = $this->AvailableTables($validated['date'], $validated['hour'], $validated['number_of_persones'] ,$validated['duration']);
             if (!$table) {
+                if($validated['number_of_persones'] > $reservation->table->capacity){
+                    return response()->json(['error' => 'No available tables'], 400);
+                }
                 $table = $reservation->table;
             }
         
