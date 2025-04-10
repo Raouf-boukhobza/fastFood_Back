@@ -28,6 +28,7 @@ class TablesReservationController extends Controller
                      ? < ADDTIME(CONCAT(reservations.date, ' ', reservations.hour), SEC_TO_TIME(reservations.duration * 3600)) 
                        AND
                        ? > CONCAT(reservations.date, ' ', reservations.hour)
+                       AND reservations.status != 'canceled'
                  )
                 ", [$startDateTime, $endDateTime]);
             })
@@ -42,13 +43,21 @@ class TablesReservationController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
-    {
-        $reservations = Reservation::with('table')->get();
-        return response()->json([
-            'reservations' => $reservations,
-        ], 200);
+   public function index(Request $request)
+{
+    $query = Reservation::with('table');
+
+    if ($request->has('status')) {
+        $query->where('status', $request->input('status'));
     }
+
+    $reservations = $query->get();
+
+    return response()->json([
+        'reservations' => $reservations,
+    ], 200);
+}
+
 
     /**
      * Store a newly created resource in storage.
@@ -155,7 +164,7 @@ class TablesReservationController extends Controller
 
     /**
      * cancel a specific reservation .
-     */
+    */
     public function cancel($id){
         $reservation = Reservation::find($id);
         if (!$reservation) {
