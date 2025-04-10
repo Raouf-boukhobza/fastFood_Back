@@ -76,10 +76,10 @@ class MenuItemsController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(MenuItems $menuItems)
+    public function show(MenuItems $menuItem)
     {
         return response()->json([
-            'menu_item' => $menuItems
+            'menu_item' => $menuItem
         ], 200);
     }
  
@@ -95,29 +95,13 @@ class MenuItemsController extends Controller
             'price' => 'numeric|min:0',
             'category_id' => 'exists:categories,id',
             'is_available' => 'boolean',
-            'image' => 'nullable|mimes:jpeg,png,jpg,gif|max:2048',
+            'image' => 'nullable|file|mimes:jpeg,png,jpg,gif|max:2048',
         ]);
     
         // Handle the image upload if provided
         $image = null;
         $imageUrl = null;
 
-
-        //
-        if (isset($validated['image']) && $validated['image']) {
-            $image = $request->file('image');
-            $imageData = base64_encode(file_get_contents($image));
-    
-            $response = Http::withHeaders([
-                'Authorization' => 'Client-ID a1de682a11b3b10',
-            ])->post('https://api.imgur.com/3/image', [
-                'image' => $imageData,
-            ]);
-    
-            if ($response->successful()) {
-                $imageUrl = $response->json()['data']['link'];
-            }
-        }
         // Update the menu item
         $menuItem->update([
             'name' => $validated['name'] ?? $menuItem->name,
@@ -125,10 +109,10 @@ class MenuItemsController extends Controller
             'price' => $validated['price'] ?? $menuItem->price,
             'catégory_id' => $validated['catégory_id'] ?? $menuItem->catégory_id,
             'is_available' => $validated['is_available'] ?? $menuItem->is_available,
-            'imageUrl' => $imageUrl ?? $menuItem->imageUrl,
+            'imageUrl' =>  $menuItem->imageUrl,
         ]);
     
-        return response()->json([
+         return response()->json([
             'message' => 'Menu item updated successfully',
             'menu_item' => $menuItem
         ]);
@@ -138,8 +122,11 @@ class MenuItemsController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(MenuItems $menuItems)
+    public function destroy(MenuItems $menuItem)
     {
-        //
+        $menuItem->delete();
+        return response()->json([
+            'message' => 'Menu item deleted successfully'
+        ], 200);
     }
 }
