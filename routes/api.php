@@ -1,8 +1,10 @@
 <?php
 
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\CatégorieController;
 use App\Http\Controllers\MenuItemsController;
 use App\Http\Controllers\OrderController;
+use App\Http\Controllers\PackController;
 use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\TablesReservationController;
 use App\Http\Middleware\RoleMiddleware;
@@ -37,5 +39,16 @@ Route::put('reservation/cancel/{id}', [TablesReservationController::class, 'canc
 
 //menuItems
 Route::apiResource('menuItems' , MenuItemsController::class);
+
+
+
+// packs 
+
+Route::apiResource('packs' , PackController::class);
+
+
+
+// Categories
+ Route::apiResource('categories', CatégorieController::class);
 
 

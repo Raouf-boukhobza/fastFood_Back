@@ -108,7 +108,7 @@ class MenuItemsController extends Controller
             'description' => $validated['description'] ?? $menuItem->description,
             'price' => $validated['price'] ?? $menuItem->price,
             'catégory_id' => $validated['catégory_id'] ?? $menuItem->catégory_id,
-            'is_available' => $validated['is_available'] ?? $menuItem->is_available,
+            'isAvailable' => $validated['is_available'] ?? $menuItem->is_available,
             'imageUrl' =>  $menuItem->imageUrl,
         ]);
     

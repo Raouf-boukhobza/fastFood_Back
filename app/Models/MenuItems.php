@@ -12,13 +12,12 @@ class MenuItems extends Model
         'price',
         'catégory_id',
         'isAvailable',
-        'imageUrl'
-    
+        'imageUrl',
     ];
 
     public function category()
     {
-        return $this->belongsTo(Catégorie::class);
+        return $this->belongsTo(Categorie::class);
     }
 
     public function orderDetails()
