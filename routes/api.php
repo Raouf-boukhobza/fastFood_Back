@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\CategorieController;
 use App\Http\Controllers\CatégorieController;
 use App\Http\Controllers\MenuItemsController;
 use App\Http\Controllers\OrderController;
@@ -49,6 +50,6 @@ Route::apiResource('packs' , PackController::class);
 
 
 // Categories
- Route::apiResource('categories', CatégorieController::class);
+ Route::apiResource('categories', CategorieController::class);
 
 
