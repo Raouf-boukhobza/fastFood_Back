@@ -7,6 +7,7 @@ use App\Http\Controllers\MenuItemsController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\PackController;
 use App\Http\Controllers\PaymentController;
+use App\Http\Controllers\TablesController;
 use App\Http\Controllers\TablesReservationController;
 use App\Http\Middleware\RoleMiddleware;
 use Illuminate\Foundation\Configuration\Middleware;
@@ -51,5 +52,9 @@ Route::apiResource('packs' , PackController::class);
 
 // Categories
  Route::apiResource('categories', CategorieController::class);
+
+
+ //tables 
+Route::apiResource('tables', TablesController::class);
 
 
