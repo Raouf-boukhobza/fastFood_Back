@@ -34,8 +34,10 @@ Route::post('/register', [AuthController::class, 'register']);
 Route::apiResource('payment', PaymentController::class)->except(['destroy', 'store']);
 
 
+
+
 //resrervation
-Route::apiResource('reservation', TablesReservationController::class);
+Route::apiResource('reservation', TablesReservationController::class)->middleware('auth:sanctum');
 Route::put('reservation/cancel/{id}', [TablesReservationController::class, 'cancel']);
 
 
@@ -56,5 +58,9 @@ Route::apiResource('packs' , PackController::class);
 
  //tables 
 Route::apiResource('tables', TablesController::class);
+
+
+//Salary
+
 
 

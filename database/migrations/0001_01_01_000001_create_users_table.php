@@ -15,7 +15,6 @@ return new class extends Migration
             $table->id();
             $table->string('userName')->unique();
             $table->foreignId('employe_id')->references('id')->on('employes')->onDelete('cascade');
-            $table->enum('role' ,['Gérant', 'Serveur', 'Caissier', 'Cuisinier']);
             $table->string('password');
             $table->rememberToken();
             $table->timestamps();
