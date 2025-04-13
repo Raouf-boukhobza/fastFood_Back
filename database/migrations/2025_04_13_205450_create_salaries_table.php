@@ -17,7 +17,7 @@ return new class extends Migration
             $table->decimal('amount', 10, 2);
             $table->date('payment_date');
             $table->enum('status', ['paid', 'pending'])->default('pending');
-            $table->string('payment_method')->nullable();
+            $table->enum('payment_method' , ["cash" , "bank transfer" , "check"])->default("cash");
             $table->decimal('hours_worked', 10, 2)->nullable();
             $table->timestamps();
         });
