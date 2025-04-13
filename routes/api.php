@@ -3,6 +3,7 @@
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CategorieController;
 use App\Http\Controllers\CatégorieController;
+use App\Http\Controllers\EmployeeController;
 use App\Http\Controllers\MenuItemsController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\PackController;
@@ -58,6 +59,10 @@ Route::apiResource('packs' , PackController::class);
 
  //tables 
 Route::apiResource('tables', TablesController::class);
+
+
+//Employes
+Route::apiResource('employes', EmployeeController::class);
 
 
 //Salary

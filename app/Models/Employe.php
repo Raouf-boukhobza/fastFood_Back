@@ -10,7 +10,8 @@ class Employe extends Model
         'name',
         'lastName',
         'phoneNumber',
-        'salary'
+        'salary',
+        'role',
     ];
 
     
