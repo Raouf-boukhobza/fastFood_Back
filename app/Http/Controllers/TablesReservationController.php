@@ -43,20 +43,25 @@ class TablesReservationController extends Controller
     /**
      * Display a listing of the resource.
      */
-   public function index(Request $request)
-{
-    $query = Reservation::with('table');
-
-    if ($request->has('status')) {
-        $query->where('status', $request->input('status'));
+    public function index(Request $request)
+    {
+        $query = Reservation::with('table');
+    
+        if ($request->has('status')) {
+            $query->where('status', $request->input('status'));
+        }
+    
+        if ($request->has('date')) {
+            $query->whereDate('date', $request->input('date'));
+        }
+    
+        $reservations = $query->get();
+    
+        return response()->json([
+            'reservations' => $reservations,
+        ], 200);
     }
-
-    $reservations = $query->get();
-
-    return response()->json([
-        'reservations' => $reservations,
-    ], 200);
-}
+    
 
 
     /**
@@ -100,7 +105,6 @@ class TablesReservationController extends Controller
             'message' => 'Reservation created successfully',
             'reservation' => $reservation,
         ], 201);
-
     }
 
     
@@ -128,7 +132,6 @@ class TablesReservationController extends Controller
             'hour' => 'required|date_format:H:i',
             'number_of_persones' => 'required|integer|min:1',
             'duration' => 'required|numeric', // Duration in hours
-            'status' => 'required|in:confirmed',
         ]);
 
         
@@ -152,7 +155,7 @@ class TablesReservationController extends Controller
                 'hour' => $validated['hour'],
                 'number_of_persones' => $validated['number_of_persones'],
                 'duration' => $validated['duration'],
-                'status' => $validated['status'],
+                'status' => $validated['status'] ?? $reservation->status,
             ]
         );
 
@@ -180,4 +183,18 @@ class TablesReservationController extends Controller
             'reservation' => $reservation,
         ], 200);
     }
+
+
+    public function destroy(Reservation $reservation)
+    {
+        if (!$reservation) {
+            return response()->json(['error' => 'Reservation not found'], 404);
+        }
+
+        // Delete the reservation
+        $reservation->delete();
+
+        return response()->json(null, 204);
+    }
+    
 }
