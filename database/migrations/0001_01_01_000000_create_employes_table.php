@@ -16,7 +16,6 @@ return new class extends Migration
             $table->string('name');
             $table->string('lastName');
             $table->string('phoneNumber')->unique();
-            $table->decimal('salary' ,10,2);
             $table->enum('role', ['Gérant', 'Serveur', 'Cuisinier' , 'Caissier']);
             $table->timestamps();
         });

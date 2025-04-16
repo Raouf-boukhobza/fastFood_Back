@@ -15,10 +15,10 @@ return new class extends Migration
             $table->id();
             $table->foreignId('employe_id')-> references('id')->on('employes')->onDelete('cascade');
             $table->decimal('amount', 10, 2);
-            $table->date('payment_date');
+            $table->date('last_payment_date')->nullable();
             $table->enum('status', ['paid', 'pending'])->default('pending');
-            $table->enum('payment_method' , ["cash" , "bank transfer" , "check"])->default("cash");
-            $table->decimal('hours_worked', 10, 2)->nullable();
+            $table->enum('payment_method' , ["cash" , "bank_transfer" , "check"])->default("cash");
+            $table->decimal('primes', 10, 2)->default(0);
             $table->timestamps();
         });
     }

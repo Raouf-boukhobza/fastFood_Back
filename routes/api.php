@@ -8,6 +8,7 @@ use App\Http\Controllers\MenuItemsController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\PackController;
 use App\Http\Controllers\PaymentController;
+use App\Http\Controllers\SalaryController;
 use App\Http\Controllers\TablesController;
 use App\Http\Controllers\TablesReservationController;
 use App\Http\Middleware\RoleMiddleware;
@@ -22,7 +23,7 @@ Route::get('/user', function (Request $request) {
 
 
 
-Route::middleware('auth:sanctum', RoleMiddleware::class . ':Gérant')->group(function () {
+Route::middleware('auth:sanctum')->group(function () {
     Route::post('/logout', [AuthController::class, 'logout']);
     Route::apiResource('orders', OrderController::class);
 });
@@ -66,6 +67,7 @@ Route::apiResource('employes', EmployeeController::class);
 
 
 //Salary
+Route::apiResource('salaries', SalaryController::class);
 
 
 

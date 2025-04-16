@@ -9,9 +9,14 @@ class Salary extends Model
     protected $fillable = [
         'employe_id',
         'amount',
-        'payment_date',
+        'last_payment_date',
         'status',
         'payment_method',
-        'hours_worked',
+        'primes',
     ];
+
+    public function employe()
+    {
+        return $this->belongsTo(Employe::class);
+    }
 }

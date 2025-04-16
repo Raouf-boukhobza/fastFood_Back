@@ -10,7 +10,6 @@ class Employe extends Model
         'name',
         'lastName',
         'phoneNumber',
-        'salary',
         'role',
     ];
 
@@ -19,6 +18,11 @@ class Employe extends Model
     public function user()
     {
         return $this->hasOne(User::class);
+    }
+
+    public function salary()
+    {
+        return $this->hasMany(Salary::class);
     }
 
     

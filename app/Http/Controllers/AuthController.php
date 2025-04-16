@@ -29,6 +29,7 @@ class AuthController extends Controller
         return response()->json([
             'user' => $user,
             'token' => $token,
+            'role' => $user->employe->role,
         ] , 200);
     }
 
@@ -38,13 +39,13 @@ class AuthController extends Controller
         $fields = $request->validate([
             'userName' => 'required|string',
             'password' => 'required|string',
-            'role' => 'required|string',
             'employe_id' => 'required',
         ]);        
 
         $user = User::create($fields);
         return response()->json([
             'user' => $user,
+            'role' => $user->employe->role,
             'message' => 'User created successfully',
           ],201
         );

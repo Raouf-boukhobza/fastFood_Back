@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('menu_items', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('catégory_id')->references('id')->on('catégories')->onDelete('cascade');
+            $table->foreignId('catégory_id')->references('id')->on('categories')->onDelete('cascade');
             $table->string('name')->unique();
             $table->text('description')->nullable();
             $table->decimal('price', 8, 2);

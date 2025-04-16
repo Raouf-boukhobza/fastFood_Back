@@ -25,7 +25,6 @@ class EmployeeController extends Controller
             'name' => 'required|string|max:255',
             'lastName' => 'required|string|max:255',
             'phoneNumber' => 'required|string|max:255|unique:employes',
-            'salary' => 'required|numeric',
             'role' => 'required|in:Gérant,Serveur,Cuisinier,Caissier',
         ]);
 
@@ -50,7 +49,6 @@ class EmployeeController extends Controller
             'name' => 'sometimes|required|string|max:255',
             'lastName' => 'sometimes|required|string|max:255',
             'phoneNumber' => 'sometimes|required|string|max:255|unique:employes,phoneNumber,' . $employe->id,
-            'salary' => 'sometimes|required|numeric',
             'role' => 'sometimes|required|in:Gérant,Serveur,Cuisinier,Caissier',
         ]);
 
