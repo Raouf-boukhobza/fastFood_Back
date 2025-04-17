@@ -13,6 +13,7 @@ class Salary extends Model
         'status',
         'payment_method',
         'primes',
+        'deduction',
     ];
 
     public function employe()

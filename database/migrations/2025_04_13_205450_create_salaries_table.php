@@ -19,6 +19,7 @@ return new class extends Migration
             $table->enum('status', ['paid', 'pending'])->default('pending');
             $table->enum('payment_method' , ["cash" , "bank_transfer" , "check"])->default("cash");
             $table->decimal('primes', 10, 2)->default(0);
+            $table->decimal('deduction', 10, 2)->default(0);
             $table->timestamps();
         });
     }

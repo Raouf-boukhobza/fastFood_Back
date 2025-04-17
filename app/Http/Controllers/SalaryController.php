@@ -13,10 +13,13 @@ class SalaryController extends Controller
      */
     public function index()
     {
-        $salaries = Salary::all();
-        return response()->json(['salaries' => $salaries]);
-    }
+        $salaries = Salary::all()->map(function ($salary) {
+            $salary->total = $salary->amount + $salary->primes - $salary->deduction;
+            return $salary;
+        });
 
+        return response()->json($salaries);
+    }
     /**
      * Store a newly created resource in storage.
      */
@@ -28,7 +31,9 @@ class SalaryController extends Controller
             'last_payment_date' => 'nullable|date',
             'primes' => 'nullable|numeric',
             'status' => 'in:paid,pending',
+            'deduction' => 'nullable|numeric',
             'payment_method' => 'in:cash,bank_transfer,check',
+
         ]);
 
         $salary = Salary::create([
@@ -37,6 +42,7 @@ class SalaryController extends Controller
             'last_payment_date' => $validated['last_payment_date'] ?? null,
             'status' => $validated['status'] ?? 'pending',
             'primes' => $validated['primes'] ?? 0,
+            'deduction' => $validated['deduction'] ?? 0,
             'payment_method' => $validated['payment_method'],
         ]);
 
@@ -48,6 +54,7 @@ class SalaryController extends Controller
      */
     public function show(Salary $salary)
     {
+        $salary->total = $salary->amount + $salary->primes - $salary->deduction;
         return response()->json($salary);
     }
 
@@ -62,6 +69,7 @@ class SalaryController extends Controller
             'last_payment_date' => 'sometimes|date',
             'primes' => 'sometimes|nullable|numeric',
             'status' => 'sometimes|in:paid,pending',
+            'deduction' => 'sometimes|nullable|numeric',
             'payment_method' => 'sometimes|in:cash,bank_transfer,check',
         ]);
 
@@ -71,6 +79,7 @@ class SalaryController extends Controller
             'last_payment_date' => $validated['last_payment_date'] ?? $salary->last_payment_date,
             'status' => $validated['status'] ?? $salary->status,
             'primes' => $validated['primes'] ?? $salary->primes,
+            'deduction' => $validated['deduction'] ?? $salary->deduction,
             'payment_method' => $validated['payment_method'] ?? $salary->payment_method,
         ]);
 
