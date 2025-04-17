@@ -17,6 +17,9 @@ return new class extends Migration
             $table->string('lastName');
             $table->string('phoneNumber')->unique();
             $table->enum('role', ['Gérant', 'Serveur', 'Cuisinier' , 'Caissier']);
+            $table->string('email')->nullable();
+            $table->string('adresse')->nullable();
+            $table->date('dateOfHire');
             $table->timestamps();
         });
     }

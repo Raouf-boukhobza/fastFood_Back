@@ -26,6 +26,9 @@ class EmployeeController extends Controller
             'lastName' => 'required|string|max:255',
             'phoneNumber' => 'required|string|max:255|unique:employes',
             'role' => 'required|in:Gérant,Serveur,Cuisinier,Caissier',
+            'email' => 'nullable|email|max:255',
+            'adresse' => 'nullable|string|max:255',
+            'dateOfHire' => 'required|date',
         ]);
 
         $employe = Employe::create($validated);
@@ -50,6 +53,9 @@ class EmployeeController extends Controller
             'lastName' => 'sometimes|required|string|max:255',
             'phoneNumber' => 'sometimes|required|string|max:255|unique:employes,phoneNumber,' . $employe->id,
             'role' => 'sometimes|required|in:Gérant,Serveur,Cuisinier,Caissier',
+            'email' => 'sometimes|nullable|email|max:255',
+            'adresse' => 'sometimes|nullable|string|max:255',
+            'dateOfHire' => 'sometimes|required|date',
         ]);
 
         $employe->update($validated);
