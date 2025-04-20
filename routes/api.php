@@ -8,6 +8,7 @@ use App\Http\Controllers\MenuItemsController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\PackController;
 use App\Http\Controllers\PaymentController;
+use App\Http\Controllers\productsController;
 use App\Http\Controllers\SalaryController;
 use App\Http\Controllers\TablesController;
 use App\Http\Controllers\TablesReservationController;
@@ -68,6 +69,10 @@ Route::apiResource('employes', EmployeeController::class);
 
 //Salary
 Route::apiResource('salaries', SalaryController::class);
+
+
+//Products
+Route::apiResource('products', productsController::class);
 
 
 
