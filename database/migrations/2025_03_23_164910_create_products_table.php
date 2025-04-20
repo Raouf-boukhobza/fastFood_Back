@@ -11,12 +11,14 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('pershilabe_products', function (Blueprint $table) {
+        Schema::create('products', function (Blueprint $table) {
             $table->id();
             $table->string('name');
             $table->decimal('Unit_price', 8, 2);
             $table->decimal('current_quantity', 8, 2);
             $table->decimal('minimum_quantity', 8, 2);
+            $table->enum("type", ['non_perishable', 'perishable']);
+            $table->date('expiration_date')->nullable();
             $table->timestamps();
         });
     }
@@ -26,6 +28,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('pershilabe_products');
+        Schema::dropIfExists('non_pershilabe_products');
     }
 };
