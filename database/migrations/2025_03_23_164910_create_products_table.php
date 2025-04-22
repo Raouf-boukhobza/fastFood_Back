@@ -18,6 +18,8 @@ return new class extends Migration
             $table->decimal('current_quantity', 8, 2);
             $table->decimal('minimum_quantity', 8, 2);
             $table->enum("type", ['non_perishable', 'perishable']);
+            $table->enum('category' , ['ingredient' , 'boisson']);
+            $table->String('fournisseur')->nullable();
             $table->date('expiration_date')->nullable();
             $table->timestamps();
         });

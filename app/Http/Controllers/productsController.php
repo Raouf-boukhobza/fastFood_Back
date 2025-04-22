@@ -33,6 +33,8 @@ class productsController extends Controller
                 'date',
                 Rule::requiredIf($request->input('type') === 'perishable'),
             ],
+            'category' => 'required|in:ingredient,boisson',
+            'fournisseur' => 'nullable|string|max:255',
         ]);
 
         $product = Products::create([
@@ -42,6 +44,8 @@ class productsController extends Controller
             'minimum_quantity' => $validated['minimum_quantity'],
             'type' => $validated['type'],
             'expiration_date' => $validated['expiration_date'] ?? null,
+            'category' => $validated['category'],
+            'fournisseur' => $validated['fournisseur'] ?? null,
         ]);
         return response()->json($product, 201);
     }
@@ -65,6 +69,8 @@ class productsController extends Controller
             'current_quantity' => 'sometimes|required|numeric',
             'minimum_quantity' => 'sometimes|required|numeric',
             'type' => 'sometimes|required|in:non_perishable,perishable',
+            'category' => 'sometimes|required|in:ingredient,boisson',
+            'fournisseur' => 'sometimes|nullable|string|max:255',
             'expiration_date' => [
                 'nullable',
                 'date',
@@ -84,4 +90,7 @@ class productsController extends Controller
         $product->delete();
         return response()->json(['message' => 'Product deleted successfully']);
     }
+
+
+    
 }

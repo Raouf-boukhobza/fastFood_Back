@@ -13,5 +13,7 @@ class Products extends Model
         'minimum_quantity',
         'type',
         'expiration_date',
+        'category',
+        'fournisseur',
     ];
 }
