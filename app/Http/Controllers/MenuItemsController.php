@@ -27,7 +27,7 @@ class MenuItemsController extends Controller
             'name' => 'required|string|max:255',
             'description' => 'nullable|string|max:1000',
             'price' => 'required|numeric|min:0',
-            'catégory_id' => 'required|exists:catégories,id',
+            'catégory_id' => 'required|exists:categories,id',
             'is_available' => 'boolean',
             'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
         ]);
@@ -37,7 +37,7 @@ class MenuItemsController extends Controller
         $imageUrl = null;
 
 
-        if (isset($validated['image']) && $validated['image']) {
+        if ($request->hasFile('image')) {
             $image = $request->file('image');
             $imageData = base64_encode(file_get_contents($image));
 
@@ -57,7 +57,7 @@ class MenuItemsController extends Controller
 
         $menuItem = MenuItems::create([
             'name' => $validated['name'],
-            'description' => $validated['description'],
+            'description' => $validated['description'] ?? null,
             'price' => $validated['price'],
             'catégory_id' => $validated['catégory_id'],
             'is_available' => $validated['is_available'] ?? true,
