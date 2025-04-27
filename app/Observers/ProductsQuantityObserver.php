@@ -21,7 +21,9 @@ class ProductsQuantityObserver
      */
     public function updated(Products $products): void
     {
-       app(StockCheckService::class)->checkStock($products);
+        if ($products->wasChanged('current_quantity')) {
+            app(StockCheckService::class)->checkStock($products);
+        }
     }
 
     /**
