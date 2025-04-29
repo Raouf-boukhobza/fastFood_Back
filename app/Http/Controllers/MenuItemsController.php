@@ -29,7 +29,7 @@ class MenuItemsController extends Controller
             'price' => 'required|numeric|min:0',
             'catégory_id' => 'required|exists:categories,id',
             'is_available' => 'boolean',
-            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp,bmp,tiff|max:5120',
         ]);
 
         // Handle the image upload if provided
@@ -51,7 +51,10 @@ class MenuItemsController extends Controller
 
             if ($response->successful()) {
                 $imageUrl = $response->json()['data']['link'];
+            }else {
+                return $response->json();
             }
+            
         }
 
 
@@ -107,7 +110,7 @@ class MenuItemsController extends Controller
             'name' => $validated['name'] ?? $menuItem->name,
             'description' => $validated['description'] ?? $menuItem->description,
             'price' => $validated['price'] ?? $menuItem->price,
-            'catégory_id' => $validated['catégory_id'] ?? $menuItem->catégory_id,
+            'catégory_id' => $validated['category_id'] ?? $menuItem->catégory_id,
             'isAvailable' => $validated['is_available'] ?? $menuItem->is_available,
             'imageUrl' =>  $menuItem->imageUrl,
         ]);

@@ -23,6 +23,7 @@ return new class extends Migration
             $table->date('expiration_date')->nullable();
             $table->timestamps();
         });
+        
     }
 
     /**
@@ -30,6 +31,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('non_pershilabe_products');
+        Schema::dropIfExists('products');
     }
 };
