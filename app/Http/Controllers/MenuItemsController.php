@@ -96,7 +96,7 @@ class MenuItemsController extends Controller
             'name' => 'string|max:255',
             'description' => 'nullable|string|max:1000',
             'price' => 'numeric|min:0',
-            'category_id' => 'exists:categories,id',
+            'catégory_id' => 'exists:categories,id',
             'is_available' => 'boolean',
             'image' => 'nullable|file|mimes:jpeg,png,jpg,gif|max:2048',
         ]);

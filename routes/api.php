@@ -5,6 +5,7 @@ use App\Http\Controllers\CategorieController;
 use App\Http\Controllers\CatégorieController;
 use App\Http\Controllers\EmployeeController;
 use App\Http\Controllers\MenuItemsController;
+use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\PackController;
 use App\Http\Controllers\PaymentController;
@@ -76,3 +77,5 @@ Route::apiResource('products', productsController::class);
 
 
 
+//notification
+Route::get('/notifications', [NotificationController::class, 'getNotifications'])->middleware('auth:sanctum');
