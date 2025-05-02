@@ -68,6 +68,9 @@ class OrderController extends Controller
             'amount' => $order->orderDetails->sum('price'),
             'date' => now(),
         ]);
+
+        //update the table status
+        $order->table->update(['status' => 'occupied']);
         
         return response()->json(['message' => 'order created successfully' , 'order' => $order->load("orderDetails")],201);
     }
