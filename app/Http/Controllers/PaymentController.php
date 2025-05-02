@@ -35,6 +35,10 @@ class PaymentController extends Controller
             'method' => 'in:cash,credit card',
         ]);
         $payment->update(array_filter($validated));
+        if($validated['status'] == 'paid'){
+            $payment->order->update(['status' => 'Payée']);
+            $payment->order->table->update(['status' => 'available']);
+        }
         return response()->json(['payment' => $payment], 200);
     }
 }
