@@ -8,7 +8,8 @@ class Tables extends Model
 {
     protected $fillable = [
         'num_table',
-        'capacity'
+        'capacity',
+        'status',
     ];
 
     public function reservations(){

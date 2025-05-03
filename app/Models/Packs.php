@@ -21,6 +21,6 @@ class Packs extends Model
 
     public function packDetails()
     {
-        return $this->hasMany(PackDetails::class);
+        return $this->hasMany(PackDetails::class , 'pack_id');
     }
 }

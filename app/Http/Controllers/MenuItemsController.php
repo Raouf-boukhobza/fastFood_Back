@@ -51,10 +51,7 @@ class MenuItemsController extends Controller
 
             if ($response->successful()) {
                 $imageUrl = $response->json()['data']['link'];
-            }else {
-                return $response->json();
-            }
-            
+            } 
         }
 
 

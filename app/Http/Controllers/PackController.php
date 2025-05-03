@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\PackDetails;
 use App\Models\Packs;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
@@ -24,41 +25,43 @@ class PackController extends Controller
         $validated = $request->validate([
             'name' => 'required|string|max:255',
             'description' => 'nullable|string|max:1000',
-            'price' => 'required|numeric|min:0',
+            'price' => 'required|numeric|integer|min:0',
             'is_available' => 'boolean',
-            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'image' => 'nullable|mimes:jpeg,png,jpg,gif,webp,bmp,tiff|max:5120',
             'pack_details' => 'required|array|min:1',
-            'pack_details.*.item_id' => 'required|exists:menu_items,id',
+            'pack_details.*.item_id' => 'required|integer|exists:menu_items,id',
             'pack_details.*.quantity' => 'required|integer|min:1',
         ]);
 
         // Handle the image upload if provided
+        // Handle the image upload if provided
+        $image = null;
         $imageUrl = null;
-        if (isset($validated['image']) && $validated['image']) {
+
+
+        if ($request->hasFile('image')) {
             $image = $request->file('image');
             $imageData = base64_encode(file_get_contents($image));
-
             $response = Http::withHeaders([
                 'Authorization' => 'Client-ID a1de682a11b3b10',
             ])->post('https://api.imgur.com/3/image', [
                 'image' => $imageData,
             ]);
-
             if ($response->successful()) {
                 $imageUrl = $response->json()['data']['link'];
-            }
+            } 
+        }
 
             $pack = Packs::create([
                 'name' => $validated['name'],
                 'description' => $validated['description'] ?? null,
-                'price' => $validated['price'],
+                'price' => (int)$validated['price'],
                 'is_available' => $validated['is_available'] ?? true,
                 'imageUrl' => $imageUrl,
             ]);
 
             foreach ($validated['pack_details'] as $packDetail) {
                 $pack->packDetails()->create([
-                    'pack_id' => $pack->id,
                     'item_id' => $packDetail['item_id'],
                     'quantity' => $packDetail['quantity'],
                 ]);
@@ -69,11 +72,7 @@ class PackController extends Controller
                 'pack' => $pack->load('packDetails'),
             ], 201);
         }
-
-
-
-
-    }
+    
 
     /**
      * Display the specified resource.
