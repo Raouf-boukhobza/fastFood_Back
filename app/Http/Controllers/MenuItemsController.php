@@ -28,7 +28,7 @@ class MenuItemsController extends Controller
             'description' => 'nullable|string|max:1000',
             'price' => 'required|numeric|min:0',
             'catégory_id' => 'required|exists:categories,id',
-            'is_available' => 'boolean',
+            'isAvailable' => 'boolean',
             'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp,bmp,tiff|max:5120',
         ]);
 
@@ -60,7 +60,7 @@ class MenuItemsController extends Controller
             'description' => $validated['description'] ?? null,
             'price' => $validated['price'],
             'catégory_id' => $validated['catégory_id'],
-            'is_available' => $validated['is_available'] ?? true,
+            'isAvailable' => $validated['isAvailable'] ?? true,
             'imageUrl' => $imageUrl,
         ]);
 
@@ -94,7 +94,7 @@ class MenuItemsController extends Controller
             'description' => 'nullable|string|max:1000',
             'price' => 'numeric|min:0',
             'catégory_id' => 'exists:categories,id',
-            'is_available' => 'boolean',
+            'isAvailable' => 'boolean',
             'image' => 'nullable|file|mimes:jpeg,png,jpg,gif|max:2048',
         ]);
     
@@ -108,7 +108,7 @@ class MenuItemsController extends Controller
             'description' => $validated['description'] ?? $menuItem->description,
             'price' => $validated['price'] ?? $menuItem->price,
             'catégory_id' => $validated['category_id'] ?? $menuItem->catégory_id,
-            'isAvailable' => $validated['is_available'] ?? $menuItem->isAvailable,
+            'isAvailable' => $validated['isAvailable'] ?? $menuItem->isAvailable,
             'imageUrl' => $imageUrl ?? $menuItem->imageUrl,
         ]);
     
