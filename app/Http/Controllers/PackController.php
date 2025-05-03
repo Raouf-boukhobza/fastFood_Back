@@ -14,7 +14,8 @@ class PackController extends Controller
      */
     public function index()
     {
-        //
+        $packs = Packs::with('packDetails')->get();
+        return response()->json(['packs' => $packs], 200);
     }
 
     /**
@@ -79,15 +80,49 @@ class PackController extends Controller
      */
     public function show(Packs $packs)
     {
-        //
+        $pack = Packs::with('packDetails')->find($packs->id);
+        return response()->json(['pack' => $pack], 200);
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Packs $packs)
+    public function update(Request $request, Packs $pack)
     {
-        //
+        $validated = $request->validate([
+            'name' => 'string|max:255',
+            'description' => 'string|max:1000',
+            'price' => 'numeric|integer|min:0',
+            'is_available' => 'boolean',
+            'image' => 'mimes:jpeg,png,jpg,gif,webp,bmp,tiff|max:5120',
+        ]);
+
+        // Handle the image upload if provided
+        $image = null;
+        $imageUrl = null;
+
+        if ($request->hasFile('image')) {
+            $image = $request->file('image');
+            $imageData = base64_encode(file_get_contents($image));
+            $response = Http::withHeaders([
+                'Authorization' => 'Client-ID a1de682a11b3b10',
+            ])->post('https://api.imgur.com/3/image', [
+                'image' => $imageData,
+            ]);
+            if ($response->successful()) {
+                $imageUrl = $response->json()['data']['link'];
+            } 
+        }
+
+        $pack->update([
+            'name' => $validated['name'] ?? $pack->name,
+            'description' => $validated['description'] ?? $pack->description,
+            'price' => (int)($validated['price'] ?? $pack->price),
+            'is_available' => $validated['is_available'] ?? $pack->is_available,
+            'imageUrl' => $imageUrl ?? $pack->imageUrl,
+        ]);
+
+        return response()->json(['pack' => $pack], 200);
     }
 
     /**
