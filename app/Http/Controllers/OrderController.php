@@ -131,6 +131,11 @@ class OrderController extends Controller
                 'amount' => $order->orderDetails->sum('price'),
             ]);
             return response()->json(['message' => 'order updated successfully' , 'order' => $order->load("orderDetails")],200);
-        
+    }
+
+    public function cancel(Order $order)
+    {
+        $order->update(['status' => 'Annulée']);
+        return response()->json(['message' => 'order canceled successfully'],200);
     }
 }

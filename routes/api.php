@@ -28,6 +28,7 @@ Route::get('/user', function (Request $request) {
 Route::middleware('auth:sanctum')->group(function () {
     Route::post('/logout', [AuthController::class, 'logout']);
     Route::apiResource('orders', OrderController::class);
+    Route::put('orders/cancel/{id}', [OrderController::class, 'cancel']);
 });
 
 Route::post('/login', [AuthController::class, 'login']);
