@@ -21,7 +21,7 @@ class OrderDetails extends Model
 
     public function pack()
     {
-        return $this->belongsTo(Packs::class);
+        return $this->belongsTo(Packs::class , 'pack_id');
     }
 
 }

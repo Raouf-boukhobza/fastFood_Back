@@ -34,7 +34,7 @@ class OrderController extends Controller
                 'delivry_phone' => 'required_if:type,Livraison',
                 'orderDetails' => 'required|array|min:1',
                 'orderDetails.*.item_id' => 'nullable|exists:menu_items,id',
-                'orderDetails.*.pack_id' => 'nullable|exists:pack_id,id',
+                'orderDetails.*.pack_id' => 'nullable|exists:packs,id',
                 'orderDetails.*.quantity' => 'required|integer|min:1',
             ]);
 
@@ -43,24 +43,32 @@ class OrderController extends Controller
             'date' => now(),
             'table_id'=> $validate['table_id'],
             'type'=>$validate['type'],
-            'esstimation_time'=>$validate['esstimation_time'] ,
+            'esstimation_time'=>$validate['esstimation_time'] ?? null ,
             'delivry_adress'=>$validate['delivry_adress']?? null,
             'delivry_phone'=>$validate['delivry_phone']?? null,
 
         ]);
 
-        foreach($validate['orderDetails'] as $orderDetail){
-            $price = $orderDetail['item_id'] 
-            ? (MenuItems::find($orderDetail['item_id'])->price) * $orderDetail['quantity']
-            : (Packs::find($orderDetail['pack_id'])->price) * $orderDetail['quantity'];
-            $order->orderDetails()->create([
-                'item_id' => $orderDetail['item_id'] ?? null,
-                'pack_id' => $orderDetail['pack_id']?? null,
-                'quantity' => $orderDetail['quantity'],
-                'price' => $price,
-                ]
-        );
+        foreach ($validate['orderDetails'] as $orderDetail) {
+            if (isset($orderDetail['item_id'])) {
+                $item = MenuItems::find($orderDetail['item_id']);
+                $price = $item ? $item->price * $orderDetail['quantity'] : 0;
+                $order->orderDetails()->create([
+                    'item_id' => $orderDetail['item_id'],
+                    'quantity' => $orderDetail['quantity'],
+                    'price' => $price,
+                ]);
+            } elseif (isset($orderDetail['pack_id'])) {
+                $pack = Packs::find($orderDetail['pack_id']);
+                $price = $pack ? $pack->price * $orderDetail['quantity'] : 0;
+                $order->orderDetails()->create([
+                    'pack_id' => $orderDetail['pack_id'],
+                    'quantity' => $orderDetail['quantity'],
+                    'price' => $price,
+                ]);
+            }
         }
+        
 
         //create the payment for the order 
         Payment::create([
@@ -101,7 +109,7 @@ class OrderController extends Controller
                 'orderDetails' => 'array|min:1',
                 'orderDetails.*.id' => 'nullable|exists:order_details,id',
                 'orderDetails.*.item_id' => 'nullable|exists:menu_items,id',
-                'orderDetails.*.pack_id' => 'nullable|exists:pack_id,id',
+                'orderDetails.*.pack_id' => 'nullable|exists:packs,id',
                 'orderDetails.*.quantity' => 'required|integer|min:1',
             ]);
 
