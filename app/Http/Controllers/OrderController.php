@@ -94,7 +94,7 @@ class OrderController extends Controller
             $validate = $request->validate([
                 'table_id' => 'integer|exists:tables,id',
                 'type' => 'in:A table,emporter,Livraison',
-                'status' => 'in:En attente,En préparation,Prête , canceled',
+                'status' => 'in:En attente,En préparation,Prête,canceled',
                 'esstimation_time' => 'date_format:H:i:s',
                 'delivry_adress' => 'required_if:type,Livraison',
                 'delivry_phone' => 'required_if:type,Livraison',
@@ -109,8 +109,10 @@ class OrderController extends Controller
             //update the order 
             $order->update(collect($validate)->except('orderDetails')->toArray());
 
-
+            
             // update the order details
+            if (!empty($validate['orderDetails']) && is_array($validate['orderDetails'])) {
+                //update or create the order details{
             foreach($validate['orderDetails'] as $orderDetail){
                 $price = $orderDetail['item_id'] 
                 ? (MenuItems::find($orderDetail['item_id'])->price) * $orderDetail['quantity']
@@ -124,6 +126,7 @@ class OrderController extends Controller
                     'price' => $price,
                 ]
             );
+        }
 
             }
             //update the payment
@@ -133,9 +136,14 @@ class OrderController extends Controller
             return response()->json(['message' => 'order updated successfully' , 'order' => $order->load("orderDetails")],200);
     }
 
-    public function cancel(Order $order)
+    public function cancel(int $id)
     {
+        $order = Order::find($id);
+        if(!$order){
+            return response()->json(['error' => 'order not found'], 404);
+        }
         $order->update(['status' => 'Annulée']);
-        return response()->json(['message' => 'order canceled successfully'],200);
+        $order->table()->update(['status' => 'available']);
+        return response()->json(['message' => 'order canceled successfully' ,"order"=> $order],200);
     }
 }
