@@ -34,6 +34,8 @@ Route::middleware('auth:sanctum')->group(function () {
 Route::post('/login', [AuthController::class, 'login']);
 Route::post('/register', [AuthController::class, 'register']);
 Route::get('/user', [AuthController::class, 'getUser'])->middleware('auth:sanctum');
+Route::patch('/user/{id}', [AuthController::class, 'updateUser'])->middleware('auth:sanctum');
+Route::delete('/user/{id}', [AuthController::class, 'deleteUser'])->middleware('auth:sanctum');
 
 
 //payment

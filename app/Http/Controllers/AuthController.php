@@ -67,4 +67,39 @@ class AuthController extends Controller
         ]);
     }
 
+    public function updateUser(Request $request, $id)
+    {
+        $user = User::find($id);
+        if (!$user) {
+            return response()->json(['message' => 'User not found'], 404);
+        }
+
+        $fields = $request->validate([
+            'userName' => 'required|string',
+            'password' => 'required|string',
+            'employe_id' => 'required',
+        ]);
+
+        $user->update($fields);
+
+        return response()->json([
+            'user' => $user,
+            'message' => 'User updated successfully',
+        ]);
+    }
+
+    public function deleteUser($id)
+    {
+        $user = User::find($id);
+        if (!$user) {
+            return response()->json(['message' => 'User not found'], 404);
+        }
+
+        $user->delete();
+
+        return response()->json([
+            'message' => 'User deleted successfully',
+        ]);
+    }
+
 }
