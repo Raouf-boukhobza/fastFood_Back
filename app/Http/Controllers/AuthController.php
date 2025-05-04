@@ -58,5 +58,13 @@ class AuthController extends Controller
             'message' => 'Logged out',
         ]);
     }
+    public function getUser(Request $request)
+    {
+        $users = User::with('employe')->get();
+        return response()->json([
+            'user' => $users,
+            'role' => $request->user()->employe->role,
+        ]);
+    }
 
 }
