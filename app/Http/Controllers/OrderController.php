@@ -29,7 +29,7 @@ class OrderController extends Controller
         $validate = $request->validate([
                 'table_id' => 'required|integer|exists:tables,id',
                 'type' => 'required|in:A table,emporter,Livraison',
-                'esstimation_time' => 'date_format:H:i:s',
+                'esstimation_time' => 'nullable|date_format:H:i:s',
                 'delivry_adress' => 'required_if:type,Livraison',
                 'delivry_phone' => 'required_if:type,Livraison',
                 'orderDetails' => 'required|array|min:1',
@@ -122,9 +122,10 @@ class OrderController extends Controller
             if (!empty($validate['orderDetails']) && is_array($validate['orderDetails'])) {
                 //update or create the order details{
             foreach($validate['orderDetails'] as $orderDetail){
-                $price = $orderDetail['item_id'] 
-                ? (MenuItems::find($orderDetail['item_id'])->price) * $orderDetail['quantity']
-                : (Packs::find($orderDetail['pack_id'])->price) * $orderDetail['quantity'];
+
+                if (isset($orderDetail['item_id'])) {
+                    $item = MenuItems::find($orderDetail['item_id']);
+                    $price = $item ? $item->price * $orderDetail['quantity'] : 0;
 
                 $order->orderDetails()->updateOrCreate(
                 [   'id' => $orderDetail['id'] ?? null,],
@@ -142,10 +143,10 @@ class OrderController extends Controller
                 'amount' => $order->orderDetails->sum('price'),
             ]);
             return response()->json(['message' => 'order updated successfully' , 'order' => $order->load("orderDetails")],200);
-    }
+    }}
 
     public function cancel(int $id)
-    {
+   {
         $order = Order::find($id);
         if(!$order){
             return response()->json(['error' => 'order not found'], 404);
